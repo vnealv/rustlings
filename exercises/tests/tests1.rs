@@ -6,12 +6,21 @@
 // This test has a problem with it -- make the test compile! Make the test
 // pass! Make the test fail! Execute `rustlings hint tests1` for hints :)
 
-// I AM NOT DONE
+
+
+fn check_me() -> bool {
+    return 1 == 1;
+}
+
 
 #[cfg(test)]
+
 mod tests {
+    use super::*;
+
     #[test]
     fn you_can_assert() {
-        assert!();
+        assert!(1 == 1, "MATCHING raw condition {}", 1+1);
+        assert!(check_me(), "MATCHING function call {}", "check_me");
     }
 }

@@ -22,11 +22,12 @@ enum ParsePersonError {
     BadLen,
     // Empty name field
     NoName,
+    // Empty age field
+    NoAge,
     // Wrapped error from parse::<usize>()
     ParseInt(ParseIntError),
 }
 
-// I AM NOT DONE
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
@@ -41,6 +42,29 @@ enum ParsePersonError {
 impl FromStr for Person {
     type Err = ParsePersonError;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        if s.chars().count() == 0 {
+            return Err(ParsePersonError::Empty);
+        }
+        let d =s.split(",").collect::<Vec<&str>>();
+        if d.len() != 2 {
+            return Err(ParsePersonError::BadLen);
+        }
+        let mut d_iter = d.iter();
+        let name = match d_iter.next() {
+            Some(n) => { if n.chars().count() == 0 { return Err(ParsePersonError::NoName) } else { n.to_string() }},
+            None => return Err(ParsePersonError::NoName),
+        };
+        let age = match d_iter.next() {
+            Some(a) => match a.parse::<usize>() {
+                Ok(v) => v,
+                Err(e) => return Err(ParsePersonError::ParseInt(e)),
+            },
+            None => return Err(ParsePersonError::NoAge),
+        };
+        Ok( Person {
+            name: name,
+            age: age
+        })
     }
 }
 

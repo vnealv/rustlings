@@ -10,13 +10,26 @@
 // No boiler plate code this time,
 // you can do this!
 
-// I AM NOT DONE
 
 trait AppendBar {
     fn append_bar(self) -> Self;
 }
 
 //TODO: Add your code here
+impl AppendBar for Vec<String> 
+//where
+//    T: ToString,
+{
+    fn append_bar(mut self) -> Self {
+       // match T {
+       //     String => { self.add_str("Bar"); self},
+       //     _ => panic!("Unimplemented"),
+       // }
+       //self.iter().map(|&x| x.push_str("Bar")).collect::<Vec<String>>()
+       self.push(String::from("Bar"));
+       self
+    }
+}
 
 #[cfg(test)]
 mod tests {

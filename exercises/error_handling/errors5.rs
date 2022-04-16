@@ -4,17 +4,16 @@
 // It won't compile right now! Why?
 // Execute `rustlings hint errors5` for hints!
 
-// I AM NOT DONE
 
 use std::error;
 use std::fmt;
 use std::num::ParseIntError;
 
 // TODO: update the return type of `main()` to make this compile.
-fn main() -> Result<(), ParseIntError> {
-    let pretend_user_input = "42";
+fn main() -> Result<(), CreationError> {
+    let pretend_user_input = "20";
     let x: i64 = pretend_user_input.parse()?;
-    println!("output={:?}", PositiveNonzeroInteger::new(x)?);
+    println!("output={}", PositiveNonzeroInteger::new(x)?);
     Ok(())
 }
 
@@ -27,6 +26,7 @@ struct PositiveNonzeroInteger(u64);
 enum CreationError {
     Negative,
     Zero,
+    ParseIntError(std::num::ParseIntError),
 }
 
 impl PositiveNonzeroInteger {
@@ -37,6 +37,13 @@ impl PositiveNonzeroInteger {
             x => Ok(PositiveNonzeroInteger(x as u64))
         }
     }
+
+}
+
+impl fmt::Display for PositiveNonzeroInteger {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.write_str("ddd")
+    }
 }
 
 // This is required so that `CreationError` can implement `error::Error`.
@@ -45,9 +52,15 @@ impl fmt::Display for CreationError {
         let description = match *self {
             CreationError::Negative => "number is negative",
             CreationError::Zero => "number is zero",
+            CreationError::ParseIntError(_) => "isn't a number", 
         };
         f.write_str(description)
     }
 }
 
 impl error::Error for CreationError {}
+impl From<ParseIntError> for CreationError {
+    fn from(err: ParseIntError) -> CreationError {
+        return CreationError::ParseIntError(err);
+    }
+}
